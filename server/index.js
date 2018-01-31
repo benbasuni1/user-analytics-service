@@ -1,29 +1,15 @@
-const PORT = 3000;
-var Koa   = require('koa');
-var route = require('koa-route');
-var app   = new Koa();
+const PORT      = 3000;
+const cassandra = require('cassandra-driver');
+const express   = require('express')
+const app       = express()
 
-// x-response-time
-app.use(async (ctx, next) => {
-  const start = Date.now();
-  await next();
-  const ms = Date.now() - start;
-  ctx.set('X-Response-Time', `${ms}ms`);
-});
+app.get('/', (req, res) => res.send('Hello World!'))
 
-// logger
-app.use(async (ctx, next) => {
-  const start = Date.now();
-  console.log("ctx: ", ctx);
-  await next();
-  const ms = Date.now() - start;
-  console.log(`${ctx.method} ${ctx.url} - ${ms} ms`);
-});
 
-app.use(async ctx => {
-  ctx.body = 'Hello World';
-});
+const client = new cassandra.Client({ contactPoints: ['h1', 'h2'], keyspace: 'ks1' });
 
-app.listen(PORT);
+const query = 'SELECT name, email FROM users WHERE key = ?';
+client.execute(query, [ 'someone' ])
+  .then(result => console.log('User with email %s', result.rows[0].email));
 
-console.log(`app listening on port ${PORT}`);
+app.listen(3000, () => console.log('Example app listening on port 3000!'))

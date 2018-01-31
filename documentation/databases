@@ -1,0 +1,74 @@
+--------------------------
+SQL / RELATIONAL DATABASES
+--------------------------
+  * MySQL [database - tables - row/columns ] {{{
+    ----------------------------------------
+    add DB    - CREATE DATABASE ${DB_NAME}
+    select DB - USE ${DB_NAME}
+    delete DB - DROP DATABASE ${DB_NAME}
+
+    add TABLE    - CREATE TABLE ${TABLE_NAME}(id: int, name: string, PRIMARY KEY(id));
+    delete TABLE - DROP TABLE ${TABLE_NAME}
+
+    CREATE - INSERT INTO ${TABLE_NAME} (id, name) VALUES (1, 'name');
+    READ   - SELECT ${FIELDS} FROM ${TABLE_NAME}
+    UPDATE - UPDATE ${TABLE_NAME} SET name = 'ben' WHERE id = 1;
+    DELETE - DELETE FROM ${TABLE_NAME} WHERE id = 1;
+
+    DATA TYPES - CHAR(fixed), VARCHAR(mutable), TEXT,
+                 DATE (YYYY-MM-DD), DATETIME(YYYY-MM-DD HH:MM:SS), TIMESTAMP(YYYYMMDDHHMMSS), TIME(HH:MM:SS),
+                 INT, TINYINT(255), SMALLINT(65535), MEDIUMINT(16777215), BIGINT, FLOAT(24), DOUBLE(53), DECIMAL
+/*}}}*/
+
+  * PostgresQL [database - tables - row/columns ] {{{
+    ----------------------------------------
+    add DB    - CREATE DATABASE ${DB_NAME}
+    select DB - \c ${DB_NAME}
+    delete DB - DROP DATABASE ${DB_NAME}
+
+    add TABLE    - CREATE TABLE ${TABLE_NAME}(id: int, name: string, PRIMARY KEY(id));
+    delete TABLE - DROP TABLE ${TABLE_NAME}
+
+    CREATE - INSERT INTO ${TABLE_NAME} (id, name) VALUES (1, 'name');
+    READ   - SELECT ${FIELDS} FROM ${TABLE_NAME}
+    UPDATE - UPDATE ${TABLE_NAME} SET name = 'ben' WHERE id = 1;
+    DELETE - DELETE FROM ${TABLE_NAME} WHERE id = 1;
+
+    DATA TYPES - https://www.tutorialspoint.com/postgresql/postgresql_data_types.htm
+/*}}}*/
+
+--------------------------------
+NOSQL / NON-RELATIONAL DATABASES
+--------------------------------
+  * MongoDB [ database - collections - documents ]{{{
+    ----------------------------------------------
+  presets: USE ${DB_NAME}
+
+    add & select DB - USE ${DB_NAME}
+    delete DB       - preset; db.dropDatabase();
+
+    add COLLECTION    - preset; db.createCollection(${COLLECTION_NAME})
+    delete COLLECTION - preset; db.${COLLECTION_NAME}.drop()
+
+    CREATE - preset; db.${COLLECTION_NAME}.insert({ key: value, key2: value2 })
+    READ   - preset; db.${COLLECTION_NAME}.find().pretty()  [[ https://www.tutorialspoint.com/mongodb/mongodb_query_document.html ]]
+    UPDATE - preset; db.${COLLECTION_NAME}.update("id": 1, "title": "Awesome Sauce")
+    DELETE - preset; db.${COLLECTION_NAME}.remove("id": 1, quantity to drop)
+
+    DATA TYPES - OBJECTID, 
+                 STRING, BOOLEAN, ARRAYS, OBJECTS, 
+                 INTEGER, DOUBLE
+/*}}}*/
+
+  * CouchDB [ database - collections - documents ]{{{
+    ----------------------------------------------
+    add DB    - PUT    http://127.0.0.1:5984/database_name
+    delete DB - DELETE http://127.0.0.1:5984/database_name
+
+    CREATE - Use _utils
+    READ   - Use _utils
+    UPDATE - Use _utils
+    DELETE - Use _utils
+
+    DATA TYPES - Any
+/*}}}*/
