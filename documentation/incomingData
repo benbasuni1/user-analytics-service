@@ -1,0 +1,55 @@
+-------------------
+Data from Filtering
+-------------------
+userid    : Integer,
+productid : Integer,
+event_type: {
+  view      : Boolean,
+  clicked   : Boolean,
+  purchased : Boolean,
+  cart      : Boolean,
+  wishlist  : Boolean,
+}
+
+-------------------------
+Data from Listings/Search
+-------------------------
+{ 
+	UserID    : Integer,
+	ProductID : Integer,
+  Viewed    : Boolean,
+  Clicked   : Boolean,
+	Timestamp : DateTime
+}
+
+----------------
+Data from Orders
+----------------
+data: {
+  userid: Integer,
+  items: [{
+      itemid : Integer, 
+      qty    : Integer, 
+      rating : Integer
+    },
+    {
+      itemid : Integer,
+      qty    : Integer,
+      rating : Integer
+    }
+  ]
+}
+
+------------------------------
+Data parsed & sent to database
+------------------------------
+{ 
+	UserID    : Integer,
+	ProductID : Integer,
+  Viewed    : Boolean,
+  Clicked   : Boolean,
+  Purchased : Boolean,
+  Cart      : Boolean,
+  Wishlist  : Boolean,
+	Timestamp : DateTime
+}

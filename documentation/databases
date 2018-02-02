@@ -72,3 +72,19 @@ NOSQL / NON-RELATIONAL DATABASES
 
     DATA TYPES - Any
 /*}}}*/
+
+  * Cassandra [ keyspaces - column families - column ]{{{
+    ----------------------------------------------
+    add KEYSPACE    - CREATE ${KEYSPACE_NAME} WITH replication = {'class', 'replication_factor'}
+    alter KEYSPACE  - ALTER ${KEYSPACE_NAME} WITH replication = {'class', 'replication_factor'}
+    delete KEYSPACE - DROP KEYSPACE {$KEYSPACE_NAME}
+
+    add COLUMNFAMILY    - CREATE COLUMNFAMILY ${TABLE_NAME} ('id': int, 'name': string)
+    delete COLUMNFAMILY - preset; db.${COLLECTION_NAME}.drop()
+
+    CREATE - CREATE TABLE ${TABLE_NAME} 
+
+    DATA TYPES - Any
+/*}}}*/
+
+
