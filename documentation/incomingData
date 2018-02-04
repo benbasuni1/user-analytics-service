@@ -10,6 +10,7 @@ event_type: {
   cart      : Boolean,
   wishlist  : Boolean,
 }
+timestamp : datetime
 
 -------------------------
 Data from Listings/Search

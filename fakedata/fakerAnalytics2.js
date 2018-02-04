@@ -4,13 +4,9 @@ var csvWriter = require('csv-write-stream')
 
 const analyticHeaders = [
     'user_id', 
-    'cart', 
-    'clicked', 
-    'created_at', 
+    'created_at',
+    'event_type',
     'product_id', 
-    'purchased', 
-    'viewed',
-    'wishlist'
 ];
 
 const ENTRIES = 500000;
@@ -22,6 +18,7 @@ const fourth = [16, 20];
 
 /* FAKER */
 var start = new Date();
+var events = ['cart', 'wishlist', 'purchased', 'viewed', 'clicked']
 
 /* CSV WRITER */
 for (var copy = fourth[0]; copy <= fourth[1]; copy++) {
@@ -30,23 +27,19 @@ for (var copy = fourth[0]; copy <= fourth[1]; copy++) {
   });
 
   if (copy < 10) copy = '0' + copy;
-  writer.pipe(fs.createWriteStream(`analytics${copy}.csv`));
+  writer.pipe(fs.createWriteStream(`analytics2/analytics${copy}.csv`));
   for (var id = 1; id <= ENTRIES; id++) {
     writer.write({
       user_id    : faker.random.number({
         'min': 1,
         'max': 10000000 
       }),
-      cart       : faker.random.boolean(),
-      clicked    : faker.random.boolean(),
-      created_at : faker.date.between('2018-01-01', '2018-04-01'),
+      created_at : new Date(faker.date.between('2018-01-01', '2018-04-01')).toISOString(),
+      event_type : events[~~(Math.random() * events.length)],
       product_id : faker.random.number({
         'min': 1,
         'max': 3000 
       }),
-      purchased  : faker.random.boolean(),
-      viewed     : faker.random.boolean(),
-      wishlist   : faker.random.boolean(),
     });
     counter++;
   }
@@ -56,4 +49,5 @@ for (var copy = fourth[0]; copy <= fourth[1]; copy++) {
 }
 
 writer.end()
+
 
