@@ -4,24 +4,36 @@ const cassandra = new cassandraDriver.Client({
   keyspace: 'user_analytics' 
 });
 
-const selectAllAnalytics = async () =>  {
-  try { return await cassandra.execute('SELECT * from analytics;', []) }
-  catch (err) { console.log(err); }
-}
-
-const selectAnalyticsForSpecificUser = async(userId) => {
-  try { return await cassandra.execute(`SELECT * FROM analytics WHERE user_id = ${userId}`, []) }
-  catch (err) { console.log(err); }
-}
-
 const selectAllUsers = async () =>  {
   try { return await cassandra.execute('SELECT * from users;', []) }
   catch (err) { console.log(err); }
 }
 
+const selectAllAnalytics = async () =>  {
+  try { return await cassandra.execute('SELECT * from analytics2;', []) }
+  catch (err) { console.log(err); }
+}
+
+const selectAnalyticsForSpecificUser = async(userId) => {
+  try { 
+    const query = `SELECT * FROM events_by_user_id WHERE user_id = ? ALLOW FILTERING;`;
+    const params = [userId];
+    return await cassandra.execute(query, params, {prepare: true});
+  } catch (err) { console.log(err); }
+}
+
+const selectAnalyticsForSpecificProductId = async(productId) => {
+  try { 
+    const query = `SELECT * FROM events_by_product_id WHERE product_id = ? ALLOW FILTERING;`;
+    const params = [productId];
+    return await cassandra.execute(query, params, {prepare: true}) ;
+  } catch (err) { console.log(err); }
+}
+
 
 module.exports = {
+  selectAllUsers,
   selectAllAnalytics,
   selectAnalyticsForSpecificUser,
-  selectAllUsers
+  selectAnalyticsForSpecificProductId
 }

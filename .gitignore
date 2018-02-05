@@ -1,7 +1,8 @@
 node_modules/
 package-lock.json
 .env
+fakedata/created_at
+fakedata/product_id
+fakedata/user_id
 fakedata/users
-fakedata/analytics
 fakedata/import*
-fakedata/analytics2

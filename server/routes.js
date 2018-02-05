@@ -1,13 +1,6 @@
-// require('dotenv').config();
 const express      = require('express');
 const bodyParser   = require('body-parser');
-const db = require('../database/cassandra.js');
-// const cookieParser = require('cookie-parser');
-// const path         = require('path');
-// const passport     = require('passport');
-
-// const db       = require('./database');
-// const movieAPI = require('./apiCalls');
+const db           = require('../database/cassandra.js');
 
 const router = express.Router();
 
@@ -21,25 +14,22 @@ router.use(bodyParser());
 ===================== */
 router.get('/', (req, res) => res.send('hello world!'));
 
-/* ===========================
-== API CALLS INSERT INTO DB == 
-=========================== */
+/* =========================
+== POLL FROM EVENTS QUEUE == 
+==========================*/
 
-/* This should be called on intervals */
-// router.get('/APItoDB/movies', async (req, res) => {
-//     try {
-//         var movies = await movieAPI.getMovies();
-//         db.insertMany(movies.data.results);
-//         res.json(movies.data.results);
-//     } catch (err) { console.log(err); }
-// });
 
 // /* ============================
 // == GET DATA STRAIGHT FROM DB ==
 // ============================ */
-router.get('/database/analytics', async (req, res) => {
+router.get('/database/analytics', (req, res) => {
+    var start = new Date();
     var getAllAnalytics = db.selectAllAnalytics();
-    getAllAnalytics.then(result => res.json(result.rows));
+    getAllAnalytics.then(result => {
+        res.json(result.rows)
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+    });
 });
 
 router.get('/database/users', (req, res) => {
@@ -47,12 +37,35 @@ router.get('/database/users', (req, res) => {
     getAllUsers.then(result => res.json(result.rows));
 });
 
+router.get('/database/analytics/user/:userId', (req, res) => {
+    var start = new Date();
+    var userId = req.params.userId;
+    var getAnalyticsForSpecificUser = db.selectAnalyticsForSpecificUser(userId);
+    getAnalyticsForSpecificUser.then(result => {
+        res.json(result.rows)
+        var elapsed = new Date() - start;
+        console.log('elapsed: ', elapsed + ' ms');
+    });
+});
 
+router.get('/database/analytics/product/:productId', (req, res) => {
+    var start = new Date();
+    var productId = req.params.productId;
+    var getAnalyticsForSpecificProduct = db.selectAnalyticsForSpecificProductId(productId);
 
-//  /* This should be called anytime the user needs data */
-//  router.get('/database/movies', async (req, res) => {
-//     try { res.json(await db.getAllMovies()); } 
-//     catch (err) { console.log(err); }
-//  });
+    getAnalyticsForSpecificProduct
+    .then(result => {
+        res.json(result.rows);
+        var elapsed = new Date() - start;
+        console.log('elapsed: ', elapsed + ' ms');
+    })
+    .catch(err => {
+        console.log(err);   
+    });
+});
+
+/* ==========================
+== POST TO FILTERING QUEUE == 
+===========================*/
 
 module.exports = router;
