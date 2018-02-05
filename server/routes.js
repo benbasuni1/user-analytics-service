@@ -19,9 +19,9 @@ router.get('/', (req, res) => res.send('hello world!'));
 ==========================*/
 
 
-// /* ============================
-// == GET DATA STRAIGHT FROM DB ==
-// ============================ */
+/* ===================
+== GET DATA FROM DB ==
+====================*/
 router.get('/database/analytics', (req, res) => {
     var start = new Date();
     var getAllAnalytics = db.selectAllAnalytics();
