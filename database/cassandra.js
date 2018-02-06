@@ -11,8 +11,7 @@ const insertIntoEventsByTime = items => {
   for (var i = 0; i < items.length; i++) {
     var query = 'INSERT INTO events_by_time_created (user_id, created_at, event_type, product_id) VALUES (?, ?, ?, ?)';
     var params = [ items[i].userId, items[i].timestamp,items[i].event_type, items[i].productId ];
-    cassandra.execute(query, params)
-    .then(result => console.log('insert into events_by_time_created successfull!', result))
+    cassandra.execute(query, params).then(result => console.log('insert into events_by_time_created successfull!', result))
   }
 }
 

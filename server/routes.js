@@ -19,14 +19,14 @@ router.get('/', (req, res) => res.send('hello world!'));
 /* =========================
 == POLL FROM EVENTS QUEUE == 
 ==========================*/
-router.get('/poll', (req, res) => {
+router.get('/poll', async (req, res) => {
     poll.getMessages()
     .then(result => format.parseData(result))
     .then(parsedData => {
         db.insertIntoEventsByUserId(parsedData);
         db.insertIntoEventsByProductId(parsedData);
         db.insertIntoEventsByTime(parsedData);
-    }).then(result => res.json('insertion complete!'))
+    }).then(() => res.json('insertion complete!'))
     .catch(err => res.json(err));
 });
 
@@ -78,5 +78,6 @@ router.get('/database/analytics/product/:productId', (req, res) => {
 /* ==========================
 == POST TO FILTERING QUEUE == 
 ===========================*/
+router.post
 
 module.exports = router;
