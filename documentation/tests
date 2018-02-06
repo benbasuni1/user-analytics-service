@@ -1,0 +1,31 @@
+TESTS 
+
+Setting up functions
+ 1. database (communication between application and cassandra database)
+        insertions
+        queries
+
+ 2. parse (parsing data from the queue to my microservice and back to filtering microservice)
+        parse from filter
+        parse from client
+        parse from orders
+
+ 3. queue (polling from the queue and setting queue up)
+        poll from user analytics queue
+
+ 4. generateData (create fake data to generate into cassandra)
+        function to populate user records
+        function to populate user analytics by time created
+        function to populate user analytics by product id
+        function to populate user analytics by user id
+
+ 5. routes (establish routes for communications)
+        establish client side routes
+        establish polling events from queue
+        establish retrieval of items from database
+        establish a post to filtering queue
+
+ 6. documentation (writing out specific tasks for each section of the program)
+
+ 7. artillery (set up artillery to stress test my micro service)
+    
