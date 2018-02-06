@@ -1,4 +1,4 @@
-var parseFromClient = data => {
+var client = data => {
    return {
     userId    : data.userId,
     productId : data.productId,
@@ -10,7 +10,7 @@ var parseFromClient = data => {
     timestamp : data.timestamp
   }
 }
-var parseFromListings = data => {
+var listings = data => {
   return {
     userId    : data.userId,
     productId : data.productId,
@@ -23,7 +23,7 @@ var parseFromListings = data => {
   }
 }
 
-var parseFromOrders = data => {
+var orders = data => {
   var result = [];
 
   for (var i = 0; i < data.data.items.length; i++) {
@@ -42,7 +42,7 @@ var parseFromOrders = data => {
   return result;
 }
 
-const parseData = data => {
+const allData = data => {
   var result = [];
   for (var i = 0; i < data.length; i++) {
     if (data[i].type === 'client') result.push(parseFromClient(data[i]));
@@ -54,8 +54,8 @@ const parseData = data => {
 }
 
 module.exports = {
-  parseFromClient,
-  parseFromListings,
-  parseFromOrders,
-  parseData
+  client,
+  listings,
+  orders,
+  allData
 }
