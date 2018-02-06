@@ -1,5 +1,5 @@
-const parseFromFilter = data => {
-  return {
+var parseFromClient = data => {
+   return {
     userId    : data.userId,
     productId : data.productId,
     viewed    : data.event_type.view,
@@ -10,7 +10,7 @@ const parseFromFilter = data => {
     timestamp : data.timestamp
   }
 }
-const parseFromListings = data => {
+var parseFromListings = data => {
   return {
     userId    : data.userId,
     productId : data.productId,
@@ -23,22 +23,39 @@ const parseFromListings = data => {
   }
 }
 
-const parseFromOrders = data => {
+var parseFromOrders = data => {
   var result = [];
 
   for (var i = 0; i < data.data.items.length; i++) {
     result.push({
-      userId: data.data.userid,
-      productId: data.data.items[i].itemId,
-      purchased: true,
+      userId    : data.data.userid,
+      productId : data.data.items[i].itemId,
+      viewed    : false,
+      clicked   : false,
+      purchased : true,
+      cart      : false,
+      wishlist  : false,
+      timestamp : data.data.timestamp
     });
   }
 
   return result;
 }
 
-exports.module = {
-  parseFromFilter,
+const parseData = data => {
+  var result = [];
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].type === 'client') result.push(parseFromClient(data[i]));
+    else if (data[i].type === 'listing') result.push(parseFromListings(data[i]));
+    else if (data[i].type === 'orders') result.push(parseFromOrders(data[i]));
+  } 
+
+  return result;
+}
+
+module.exports = {
+  parseFromClient,
   parseFromListings,
-  parseFromOrders
+  parseFromOrders,
+  parseData
 }

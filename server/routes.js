@@ -1,6 +1,8 @@
-const express      = require('express');
-const bodyParser   = require('body-parser');
-const db           = require('../database/cassandra.js');
+const express    = require('express');
+const bodyParser = require('body-parser');
+const db         = require('../database/cassandra.js');
+const poll       = require('../queue/pollUserAnalytics');
+const format     = require('../helpers/parse.js');
 
 const router = express.Router();
 
@@ -17,7 +19,16 @@ router.get('/', (req, res) => res.send('hello world!'));
 /* =========================
 == POLL FROM EVENTS QUEUE == 
 ==========================*/
-
+router.get('/poll', (req, res) => {
+    poll.getMessages()
+    .then(result => format.parseData(result))
+    .then(parsedData => {
+        db.insertIntoEventsByUserId(parsedData);
+        db.insertIntoEventsByProductId(parsedData);
+        db.insertIntoEventsByTime(parsedData);
+    }).then(result => res.json('insertion complete!'))
+    .catch(err => res.json(err));
+});
 
 /* ===================
 == GET DATA FROM DB ==
