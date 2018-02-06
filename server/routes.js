@@ -2,7 +2,7 @@ const express    = require('express');
 const bodyParser = require('body-parser');
 const db         = require('../database/cassandra.js');
 const poll       = require('../queue/pollUserAnalytics');
-const format     = require('../helpers/parse.js');
+const format     = require('../parser/parse.js');
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.get('/', (req, res) => res.send('hello world!'));
 /* =========================
 == POLL FROM EVENTS QUEUE == 
 ==========================*/
-router.get('/poll', async (req, res) => {
+router.get('/queue/poll/analytics', async (req, res) => {
     poll.getMessages()
     .then(result => format.parseData(result))
     .then(parsedData => {
@@ -33,6 +33,21 @@ router.get('/poll', async (req, res) => {
 /* ===================
 == GET DATA FROM DB ==
 ====================*/
+
+/* == Users == */
+router.get('/database/users', (req, res) => {
+    var getAllUsers = db.selectAllUsers();
+    getAllUsers.then(result => res.json(result.rows));
+});
+
+router.get('/database/users/:userId', (req, res) => {
+    var userId = req.params.userId;
+    res.json('abc');
+    // var getAllUsers = db.selectAllUsers();
+    // getAllUsers.then(result => res.json(result.rows));
+});
+
+/* == Analytics == */
 router.get('/database/analytics', (req, res) => {
     var start = new Date();
     var getAllAnalytics = db.selectAllAnalytics();
@@ -43,41 +58,21 @@ router.get('/database/analytics', (req, res) => {
     });
 });
 
-router.get('/database/users', (req, res) => {
-    var getAllUsers = db.selectAllUsers();
-    getAllUsers.then(result => res.json(result.rows));
+router.get('/database/analytics/time/:time_started/:time_end', (req, res) => {
+    res.json('abc');
 });
 
-router.get('/database/analytics/user/:userId', (req, res) => {
-    var start = new Date();
-    var userId = req.params.userId;
-    var getAnalyticsForSpecificUser = db.selectAnalyticsForSpecificUser(userId);
-    getAnalyticsForSpecificUser.then(result => {
-        res.json(result.rows)
-        var elapsed = new Date() - start;
-        console.log('elapsed: ', elapsed + ' ms');
-    });
+router.get('/database/analytics/event/:type', (req, res) => {
+    res.send('true');
 });
 
-router.get('/database/analytics/product/:productId', (req, res) => {
-    var start = new Date();
-    var productId = req.params.productId;
-    var getAnalyticsForSpecificProduct = db.selectAnalyticsForSpecificProductId(productId);
+router.post('/queue/filtering'), (req, res) => {
+    console.log('here');
+    res.send('POST request');
+}
 
-    getAnalyticsForSpecificProduct
-    .then(result => {
-        res.json(result.rows);
-        var elapsed = new Date() - start;
-        console.log('elapsed: ', elapsed + ' ms');
-    })
-    .catch(err => {
-        console.log(err);   
-    });
-});
 
 /* ==========================
 == POST TO FILTERING QUEUE == 
 ===========================*/
-router.post
-
 module.exports = router;

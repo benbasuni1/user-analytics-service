@@ -1,11 +1,19 @@
-const tests = require('mocha'), should = require('chai').should();
+const tests = require('mocha'); 
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const should = chai.should();
+chai.use(chaiHttp);
 
-const db    = require('../database/cassandra');
-const parse = require('../parser/parse');
-const poll  = require('../queue/pollUserAnalytics');
+const db            = require('../database/cassandra');
+const parse         = require('../parser/parse');
+const poll          = require('../queue/pollUserAnalytics');
+const dataGenerator = require('../generateData/generateData')
+const homeUrl       = 'http://localhost:3000';
+
 
 // Setting up functions
-describe('INIT SETUP', () => {
+describe('INIT SETUP', function() {
+    this.timeout(5000);
   // 1. database (communication between application and cassandra database)
   describe('1. Cassandra Database', () => {
     // insertions
@@ -47,35 +55,38 @@ describe('INIT SETUP', () => {
   //  4. generateData (create fake data to generate into cassandra)
   describe('4. Generating Fake Data to Cassandra', () => {
     // function to populate user records
-    xit("popuateUserRecords", () => should.exist(db.selectAllAnalytics));
+    it("popuateUserRecords", () => should.exist(dataGenerator.userData));
     // function to populate user analytics
-    xit("populateAnalyticsRecords", () => should.exist(db.selectAllAnalytics));
+    it("populateAnalyticsRecords", () => should.exist(dataGenerator.analyticsData));
   });
   //  5. routes (establish routes for communications)
   describe('5. Routes', () => {
     // establish client side routes
     describe('Client Side Routes', () => {
-      xit("GET /", () => should.exist(db.selectAllAnalytics));
+      it("GET /", () => chai.request(homeUrl).get('/'));
     })
     // establish polling events from queue
     describe('Polling Routes from Analytics Queue', () => {
-      xit("GET /queue/poll/analytics", () => should.exist(db.selectAllAnalytics));
+      it("GET /queue/poll/analytics", () => chai.request(homeUrl).get('/queue/poll/analytics'));
     })
     // establish retrieval of items from database
     describe('Database Records Retrieval', () => {
       describe('Users', () => {
-        xit("GET /database/users", () => should.exist(db.selectAllAnalytics));
-        xit("GET /database/users/:userId", () => should.exist(db.selectAllAnalytics));
+        it("GET /database/users", () => chai.request(homeUrl).get('/database/users'));
+        it("GET /database/users/:userId", () => chai.request(homeUrl).get('/database/users/1111'));
       }),
       describe('Analytics', () => {
-        xit("GET /database/analytics", () => should.exist(db.selectAllAnalytics));
-        xit("GET /database/analytics/:event_type", () => should.exist(db.selectAllAnalytics));
-        xit("GET /database/analytics/time_start/time_end", () => should.exist(db.selectAllAnalytics));
+        it("GET /database/analytics", done => {
+          chai.request(homeUrl).get('/database/analytics')
+          done();
+        });
+        it("GET /database/analytics/event/:type", () => chai.request(homeUrl).get('/database/analytics/event/clicked'));
+        it("GET /database/analytics/time/:timestart/:timeend", () => chai.request(homeUrl).get('/database/analytics/time/01012018/01072018'));
       })
     })
     // establish a post to filtering queue
     describe('Post to Filtering Queue', () => {
-      xit("POST /queue/filtering", () => should.exist(db.selectAllAnalytics));
+      it("POST /queue/filtering", () => chai.request(homeUrl).post('/queue/filtering'));
     })
   });
   //  6. documentation (writing out specific tasks for each section of the program)
