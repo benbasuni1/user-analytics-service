@@ -2,27 +2,20 @@ var faker     = require('faker');
 var fs        = require('fs');
 var csvWriter = require('csv-write-stream')
 
-const folder = 'product_id';
-
 const ENTRIES = 500000;
-const first  = [1, 5];
-const second = [6, 10];
-const third  = [11, 15];
-const fourth = [16, 20];
 
 /* FAKER */
 var start = new Date();
 var events = ['cart', 'wishlist', 'purchased', 'viewed', 'clicked']
 
 /* Generate ANALYTICS table */
-const analyticsData = (type, active) => {
-  if (!active) return;
+const analyticsData = (type, round) => {
 
-  for (var copy = first[0]; copy <= first[1]; copy++) {
+  for (var copy = round[0]; copy <= round[1]; copy++) {
     var writer = csvWriter({ sendHeaders: false });
 
     if (copy < 10) copy = '0' + copy;
-    writer.pipe(fs.createWriteStream(`${folder}/${folder}${copy}.csv`));
+    writer.pipe(fs.createWriteStream(`${type}/${type}${copy}.csv`));
     for (var id = 1; id <= ENTRIES; id++) {
       if (type === 'product_id') {
         writer.write({
@@ -41,7 +34,7 @@ const analyticsData = (type, active) => {
       }
     }
     var elapsed = new Date() - start;
-    console.log(folder + copy + '.csv written!');
+    console.log(type + copy + '.csv written!');
   }
   writer.end()
 }
@@ -72,11 +65,7 @@ const userData = () => {
   writer.end()
 }
 
-analyticsData(folder, true);
-
 module.exports = {
   userData,
   analyticsData
 }
-
-

@@ -21,6 +21,7 @@ router.get('/', (req, res) => res.send('hello world!'));
 ==========================*/
 router.get('/queue/poll/analytics', async (req, res) => {
     poll.getMessages()
+    .then(result => res.json(result))
     .then(result => format.parseData(result))
     .then(parsedData => {
         db.insertIntoEventsByUserId(parsedData);
@@ -121,7 +122,7 @@ router.get('/database/analytics/time/:start_date/:end_date', (req, res) => {
 });
 
 router.post('/queue/filtering', function(req, res, next){
-    res.send('abc');
+    res.send('POST items to filtering queue');
 });
 
 
