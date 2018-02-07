@@ -51,7 +51,7 @@ describe('DATABASE', function() {
         done()
       });
     });
-    it("Select All by Time", function(done) {
+    xit("Select All by Time", function(done) {
       chai.request(homeUrl).get('/database/analytics/time')
       .end(function(err, res) {
         expect(res.body[0]).to.have.own.property('product_id');
@@ -78,7 +78,7 @@ describe('DATABASE', function() {
       });
     });
     it("Select Events By Product Id", function(done) {
-      chai.request(homeUrl).get('/database/analytics/product/47')
+      chai.request(homeUrl).get('/database/analytics/product/2731')
       .end(function(err, res) {
         expect(res.body[0]).to.have.own.property('product_id');
         expect(res.body[0]).to.have.own.property('event_type');
@@ -89,25 +89,19 @@ describe('DATABASE', function() {
       });
     });
     it("Select Events By User Id", function(done) {
-      chai.request(homeUrl).get('/database/users/860380')
+      chai.request(homeUrl).get('/database/analytics/user/860380')
       .end(function(err, res) {
-        expect(res.body[0]).to.have.own.property('id');
-        expect(res.body[0]).to.have.own.property('email');
-        expect(res.body[0]).to.have.own.property('first_name');
-        expect(res.body[0]).to.have.own.property('last_name');
-        expect(res.body[0]).to.have.own.property('phone');
+        expect(res.body[0]).to.have.own.property('user_id');
+        expect(res.body[0]).to.have.own.property('event_type');
+        expect(res.body[0]).to.have.own.property('created_at');
+        expect(res.body[0]).to.have.own.property('product_id');
         res.should.have.status(200);
         done();
       });
     });
     xit("Select Events By Time", function(done) {
-      chai.request(homeUrl).get('/database/users/820263')
+      chai.request(homeUrl).get('/database/analytics/time')
       .end(function(err, res) {
-        expect(res.body[0]).to.have.own.property('id');
-        expect(res.body[0]).to.have.own.property('email');
-        expect(res.body[0]).to.have.own.property('first_name');
-        expect(res.body[0]).to.have.own.property('last_name');
-        expect(res.body[0]).to.have.own.property('phone');
         res.should.have.status(200);
         done();
       });

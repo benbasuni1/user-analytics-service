@@ -29,8 +29,8 @@ describe('INIT SETUP', function() {
       })
       describe('analytics', () => {
         it("selectEventsByProductId", () => should.exist(db.selectEventsByProductId));
-        it("selectEventsByUserId", () => should.exist(db.selectAllByUserId));
-        it("selectEventsByTime", () => should.exist(db.selectAllByTime));
+        xit("selectEventsByUserId", () => should.exist(db.selectAllByUserId));
+        xit("selectEventsByTime", () => should.exist(db.selectAllByTime));
       })
     });
   });
@@ -79,8 +79,8 @@ describe('INIT SETUP', function() {
           done();
         });
         it("GET /database/analytics/product/:productId", () => chai.request(homeUrl).get('/database/analytics/product/1324'));
-        it("GET /database/analytics/user/:userId", () => chai.request(homeUrl).get('/database/analytics/user/860380'));
-        xit("GET /database/analytics/time/:time_started/:time_end", () => chai.request(homeUrl).get('/database/analytics/time/01012018/01072018'));
+        xit("GET /database/analytics/user/:userId", () => chai.request(homeUrl).get('/database/analytics/user/860380'));
+        xit("GET /database/analytics/time/:start_date/:end_date", () => chai.request(homeUrl).get('/database/analytics/time/20180101/20180108'));
       })
     })
     // establish a post to filtering queue

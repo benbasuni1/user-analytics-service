@@ -92,13 +92,28 @@ router.get('/database/analytics/product/:productId', (req, res) => {
         console.log(elapsed + ' ms');
     });
 });
-router.get('/database/analytics/time/:time_started/:time_end', (req, res) => {});
 
 router.get('/database/analytics/user/:userId', (req, res) => {
     var start = new Date();
     var userId = req.params.userId;
     var selectByUserId = db.selectEventsByUserId(userId);
     selectByUserId.then(result => {
+        res.json(result.rows);
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+    });
+});
+
+/* 
+    Time Format : yyyymmdd (YEAR MONTH DAY)
+*/
+router.get('/database/analytics/time/:start_date/:end_date', (req, res) => {
+    var start = new Date();
+    var startDate = req.params.start_date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3") + ' 00:00:00+0200';
+    var endDate = req.params.end_date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3") + ' 00:00:00+0200';
+
+    var selectByTime = db.selectEventsByTime(startDate, endDate);
+    selectByTime.then(result => {
         res.json(result.rows);
         var elapsed = new Date() - start;
         console.log(elapsed + ' ms');
