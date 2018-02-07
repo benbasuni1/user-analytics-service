@@ -34,23 +34,15 @@ router.get('/queue/poll/analytics', async (req, res) => {
 == GET DATA FROM DB ==
 ====================*/
 
-/* == Users == */
+/* Select All */
 router.get('/database/users', (req, res) => {
     var getAllUsers = db.selectAllUsers();
     getAllUsers.then(result => res.json(result.rows));
 });
 
-router.get('/database/users/:userId', (req, res) => {
-    var userId = req.params.userId;
-    res.json('abc');
-    // var getAllUsers = db.selectAllUsers();
-    // getAllUsers.then(result => res.json(result.rows));
-});
-
-/* == Analytics == */
-router.get('/database/analytics', (req, res) => {
+router.get('/database/analytics/product', (req, res) => {
     var start = new Date();
-    var getAllAnalytics = db.selectAllAnalytics();
+    var getAllAnalytics = db.selectAllByProductId();
     getAllAnalytics.then(result => {
         res.json(result.rows)
         var elapsed = new Date() - start;
@@ -58,18 +50,64 @@ router.get('/database/analytics', (req, res) => {
     });
 });
 
-router.get('/database/analytics/time/:time_started/:time_end', (req, res) => {
-    res.json('abc');
+router.get('/database/analytics/user', (req, res) => {
+    var start = new Date();
+    var getAllAnalytics = db.selectAllByUserId();
+    getAllAnalytics.then(result => {
+        res.json(result.rows)
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+    });
 });
 
-router.get('/database/analytics/event/:type', (req, res) => {
-    res.send('true');
+router.get('/database/analytics/time', (req, res) => {
+    var start = new Date();
+    var getAllAnalytics = db.selectAllByTime();
+    getAllAnalytics.then(result => {
+        res.json(result.rows)
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+    });
 });
 
-router.post('/queue/filtering'), (req, res) => {
-    console.log('here');
-    res.send('POST request');
-}
+/* == Select Specific == */
+router.get('/database/users/:userId', (req, res) => {
+    var start = new Date();
+    var userId = req.params.userId;
+    var selectByUserId = db.selectUserByUserId(userId);
+    selectByUserId.then(result => {
+        res.json(result.rows);
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+    });
+});
+
+router.get('/database/analytics/product/:productId', (req, res) => {
+    var start = new Date();
+    var productId = req.params.productId;
+    var selectByProductId = db.selectEventsByProductId(productId);
+    selectByProductId.then(result => {
+        res.json(result.rows);
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+    });
+});
+router.get('/database/analytics/time/:time_started/:time_end', (req, res) => {});
+
+router.get('/database/analytics/user/:userId', (req, res) => {
+    var start = new Date();
+    var userId = req.params.userId;
+    var selectByUserId = db.selectEventsByUserId(userId);
+    selectByUserId.then(result => {
+        res.json(result.rows);
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+    });
+});
+
+router.post('/queue/filtering', function(req, res, next){
+    res.send('abc');
+});
 
 
 /* ==========================

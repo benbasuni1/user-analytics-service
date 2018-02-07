@@ -10,7 +10,6 @@ const poll          = require('../queue/pollUserAnalytics');
 const dataGenerator = require('../generateData/generateData')
 const homeUrl       = 'http://localhost:3000';
 
-
 // Setting up functions
 describe('INIT SETUP', function() {
     this.timeout(5000);
@@ -29,10 +28,9 @@ describe('INIT SETUP', function() {
         it("selectUserByUserId", () => should.exist(db.selectUserByUserId));
       })
       describe('analytics', () => {
-        it("selectAllAnalytics", () => should.exist(db.selectAllAnalytics));
-        it("selectAnalyticsByProductId", () => should.exist(db.selectAnalyticsByProductId));
-        it("selectAnalyticsByUserId", () => should.exist(db.selectAnalyticsByUserId));
-        it("selectAnalyticsByTime", () => should.exist(db.selectAnalyticsByTime));
+        it("selectEventsByProductId", () => should.exist(db.selectEventsByProductId));
+        it("selectEventsByUserId", () => should.exist(db.selectAllByUserId));
+        it("selectEventsByTime", () => should.exist(db.selectAllByTime));
       })
     });
   });
@@ -80,8 +78,9 @@ describe('INIT SETUP', function() {
           chai.request(homeUrl).get('/database/analytics')
           done();
         });
-        it("GET /database/analytics/event/:type", () => chai.request(homeUrl).get('/database/analytics/event/clicked'));
-        it("GET /database/analytics/time/:timestart/:timeend", () => chai.request(homeUrl).get('/database/analytics/time/01012018/01072018'));
+        it("GET /database/analytics/product/:productId", () => chai.request(homeUrl).get('/database/analytics/product/1324'));
+        it("GET /database/analytics/user/:userId", () => chai.request(homeUrl).get('/database/analytics/user/860380'));
+        xit("GET /database/analytics/time/:time_started/:time_end", () => chai.request(homeUrl).get('/database/analytics/time/01012018/01072018'));
       })
     })
     // establish a post to filtering queue

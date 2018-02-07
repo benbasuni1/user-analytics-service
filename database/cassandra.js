@@ -37,23 +37,44 @@ const insertIntoEventsByProductId = items => {
 == QUERIES ==
 ===========*/
 
-/* == USERS == */
+/* == SELECT ALL == */
 const selectAllUsers = async () =>  {
   try { return await cassandra.execute('SELECT * from users;', []) }
   catch (err) { console.log(err); }
 }
 
-const selectUserByUserId = async () =>  {}
-
-/* == ANALYTICS == */
-const selectAllAnalytics = async () =>  {
-  try { return await cassandra.execute('SELECT * from analytics2;', []) }
+const selectAllByProductId = async () =>  {
+  try { return await cassandra.execute('SELECT * from events_by_product_id;', []) }
   catch (err) { console.log(err); }
 }
 
-const selectAnalyticsByProductId = async () =>  {}
-const selectAnalyticsByUserId = async () =>  {}
-const selectAnalyticsByTime = async () =>  {}
+const selectAllByUserId = async () => {
+  try { return await cassandra.execute('SELECT * from events_by_user_id;', []) }
+  catch (err) { console.log(err); }
+}
+const selectAllByTime = async () =>  {
+  try { return await cassandra.execute('SELECT * from events_by_time_created;', []) }
+  catch (err) { console.log(err); }
+}
+
+/* == SELECT SPECIFIC == */
+const selectUserByUserId = async userId =>  {
+  try { return await cassandra.execute(`SELECT * from users where id = ${userId};`, []) }
+  catch (err) { console.log(err); }
+}
+
+const selectEventsByProductId = async productId => {
+  try { return await cassandra.execute(`SELECT * from events_by_product_id where product_id = ${productId} allow filtering;`, []) }
+  catch (err) { console.log(err); }
+}
+const selectEventsByUserId = async userId => {
+  try { return await cassandra.execute(`SELECT * from users;`, []) }
+  catch (err) { console.log(err); }
+}
+const selectEventsByTime = async (timeStart, timeEnd) => {
+  try { return await cassandra.execute(`SELECT * from users;`, []) }
+  catch (err) { console.log(err); }
+}
 
 module.exports = {
   insertIntoEventsByTime,
@@ -61,10 +82,13 @@ module.exports = {
   insertIntoEventsByProductId,
 
   selectAllUsers,
-  selectUserByUserId,
+  selectAllByProductId,
+  selectAllByUserId,
+  selectAllByTime,
 
-  selectAllAnalytics,
-  selectAnalyticsByProductId,
-  selectAnalyticsByUserId,
-  selectAnalyticsByTime,
+  selectUserByUserId,
+  selectEventsByProductId,
+  selectEventsByUserId,
+  selectEventsByTime
 }
+
