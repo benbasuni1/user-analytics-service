@@ -1,56 +1,41 @@
+-------------------------
+Data from Listings/Search (clicked)
+-------------------------
+{ 
+	UserID    : Integer,
+	ProductID : Integer,
+  timestamp : datetime
+}
+
 -------------------
-Data from Filtering
+Data from Client
 -------------------
 userid    : Integer,
 productid : Integer,
-event_type: {
-  view      : Boolean,
-  clicked   : Boolean,
-  purchased : Boolean,
-  cart      : Boolean,
-  wishlist  : Boolean,
-}
+cart      : Boolean,
+wishlist  : Boolean,
 timestamp : datetime
 
--------------------------
-Data from Listings/Search
--------------------------
-{ 
-	UserID    : Integer,
-	ProductID : Integer,
-  Viewed    : Boolean,
-  Clicked   : Boolean,
-	Timestamp : DateTime
-}
-
 ----------------
-Data from Orders
+Data from Orders (purchased)
 ----------------
-data: {
-  userid: Integer,
-  items: [{
-      itemid : Integer, 
-      qty    : Integer, 
-      rating : Integer
-    },
-    {
-      itemid : Integer,
-      qty    : Integer,
-      rating : Integer
-    }
-  ]
+{
+  userid: integer,
+  productId: integer,
+  qty: integer,
+  rating: qty,
+  timestamp: datetime
 }
 
 ------------------------------
-Data parsed & sent to database
+Data parsed & sent to database (Get from last week)
 ------------------------------
 { 
-	UserID    : Integer,
-	ProductID : Integer,
-  Viewed    : Boolean,
-  Clicked   : Boolean,
+  clicked   : Boolean,
   Purchased : Boolean,
   Cart      : Boolean,
   Wishlist  : Boolean,
-	Timestamp : DateTime
+	UserID    : Integer,
+	ProductID : Integer,
+  Event     : String
 }

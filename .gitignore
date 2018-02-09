@@ -9,3 +9,4 @@ generateData/import*
 
 newrelic.js
 newrelic_agent.log
+.nyc_output/
