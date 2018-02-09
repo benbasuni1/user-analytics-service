@@ -7,3 +7,5 @@ generateData/user_id
 generateData/users
 generateData/import*
 
+newrelic.js
+newrelic_agent.log

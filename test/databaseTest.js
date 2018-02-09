@@ -18,8 +18,8 @@ describe('DATABASE', function() {
       });
     })
   });
-  describe('Selecting All', () => {
-    it("Select All Users", function(done) {
+  describe('ALL', () => {
+    it("All Users", function(done) {
       chai.request(homeUrl).get('/database/users')
       .end(function(err, res) {
         res.should.have.status(200);
@@ -27,7 +27,7 @@ describe('DATABASE', function() {
         done()
       });
     });
-    it("Select All by Product Id", function(done) {
+    it("All Events :: Product Id", function(done) {
       chai.request(homeUrl).get('/database/analytics/product')
       .end(function(err, res) {
         expect(res.body[0]).to.have.own.property('product_id');
@@ -39,7 +39,7 @@ describe('DATABASE', function() {
         done()
       });
     });
-    it("Select All by User Id", function(done) {
+    it("All Events :: User Id", function(done) {
       chai.request(homeUrl).get('/database/analytics/user')
       .end(function(err, res) {
         expect(res.body[0]).to.have.own.property('product_id');
@@ -51,7 +51,7 @@ describe('DATABASE', function() {
         done()
       });
     });
-    xit("Select All by Time", function(done) {
+    xit("All Events :: Time", function(done) {
       chai.request(homeUrl).get('/database/analytics/time')
       .end(function(err, res) {
         expect(res.body[0]).to.have.own.property('product_id');
@@ -64,8 +64,8 @@ describe('DATABASE', function() {
       });
     });
   });
-  describe('Specific Queries', () => {
-    it("Select Users by Id", function(done) {
+  describe('SPECIFIC', () => {
+    it("Users :: User Id", function(done) {
       chai.request(homeUrl).get('/database/users/820263')
       .end(function(err, res) {
         expect(res.body[0]).to.have.own.property('id');
@@ -77,7 +77,7 @@ describe('DATABASE', function() {
         done();
       });
     });
-    it("Select Events By Product Id", function(done) {
+    it("Events :: Product Id", function(done) {
       chai.request(homeUrl).get('/database/analytics/product/2731')
       .end(function(err, res) {
         expect(res.body[0]).to.have.own.property('product_id');
@@ -88,7 +88,7 @@ describe('DATABASE', function() {
         done();
       });
     });
-    it("Select Events By User Id", function(done) {
+    it("Events :: User Id", function(done) {
       chai.request(homeUrl).get('/database/analytics/user/860380')
       .end(function(err, res) {
         expect(res.body[0]).to.have.own.property('user_id');
@@ -99,7 +99,7 @@ describe('DATABASE', function() {
         done();
       });
     });
-    xit("Select Events By Time", function(done) {
+    xit("Events :: Time", function(done) {
       chai.request(homeUrl).get('/database/analytics/time')
       .end(function(err, res) {
         res.should.have.status(200);

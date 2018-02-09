@@ -1,0 +1,13 @@
+config:
+  target: 'http://127.0.0.1:3000'
+  phases:
+    - duration: 20
+      arrivalRate: 20
+      name: "Attack /database/analytics/product/799"
+
+scenarios:
+  - flow:
+    - get:
+        url: "/database/analytics/product/799"
+
+

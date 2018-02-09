@@ -37,8 +37,13 @@ router.get('/queue/poll/analytics', async (req, res) => {
 
 /* Select All */
 router.get('/database/users', (req, res) => {
+    var start = new Date();
     var getAllUsers = db.selectAllUsers();
-    getAllUsers.then(result => res.json(result.rows));
+    getAllUsers.then(result => {
+        res.json(result.rows)
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms | All Users');
+    }).catch(err => console.log("Err", err));
 });
 
 router.get('/database/analytics/product', (req, res) => {
@@ -47,8 +52,8 @@ router.get('/database/analytics/product', (req, res) => {
     getAllAnalytics.then(result => {
         res.json(result.rows)
         var elapsed = new Date() - start;
-        console.log(elapsed + ' ms');
-    });
+        console.log(elapsed + ' ms | All Analytics by Product Id');
+    }).catch(err => console.log("Err", err));
 });
 
 router.get('/database/analytics/user', (req, res) => {
@@ -57,8 +62,8 @@ router.get('/database/analytics/user', (req, res) => {
     getAllAnalytics.then(result => {
         res.json(result.rows)
         var elapsed = new Date() - start;
-        console.log(elapsed + ' ms');
-    });
+        console.log(elapsed + ' ms | All Analytics by User');
+    }).catch(err => console.log("Err", err));
 });
 
 router.get('/database/analytics/time', (req, res) => {
@@ -67,8 +72,8 @@ router.get('/database/analytics/time', (req, res) => {
     getAllAnalytics.then(result => {
         res.json(result.rows)
         var elapsed = new Date() - start;
-        console.log(elapsed + ' ms');
-    });
+        console.log(elapsed + ' ms | All Analytics by Time');
+    }).catch(err => console.log("Err", err));
 });
 
 /* == Select Specific == */
@@ -80,7 +85,7 @@ router.get('/database/users/:userId', (req, res) => {
         res.json(result.rows);
         var elapsed = new Date() - start;
         console.log(elapsed + ' ms');
-    });
+    }).catch(err => console.log("Err", err));
 });
 
 router.get('/database/analytics/product/:productId', (req, res) => {
@@ -91,7 +96,7 @@ router.get('/database/analytics/product/:productId', (req, res) => {
         res.json(result.rows);
         var elapsed = new Date() - start;
         console.log(elapsed + ' ms');
-    });
+    }).catch(err => console.log("Err", err));
 });
 
 router.get('/database/analytics/user/:userId', (req, res) => {
@@ -102,7 +107,7 @@ router.get('/database/analytics/user/:userId', (req, res) => {
         res.json(result.rows);
         var elapsed = new Date() - start;
         console.log(elapsed + ' ms');
-    });
+    }).catch(err => console.log("Err", err));
 });
 
 /* 
@@ -118,11 +123,11 @@ router.get('/database/analytics/time/:start_date/:end_date', (req, res) => {
         res.json(result.rows);
         var elapsed = new Date() - start;
         console.log(elapsed + ' ms');
-    });
+    }).catch(err => console.log("Err", err));
 });
 
 router.post('/queue/filtering', function(req, res, next){
-    res.send('POST items to filtering queue');
+
 });
 
 

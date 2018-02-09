@@ -1,3 +1,4 @@
+require('newrelic');
 const PORT      = 3000;
 const cassandra = require('cassandra-driver');
 const express   = require('express');

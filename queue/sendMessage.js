@@ -1,7 +1,5 @@
-// Load the AWS SDK for Node.js
 var faker = require('faker');
 var AWS = require('aws-sdk');
-// Set the region 
 AWS.config.update({region: 'us-west-1'});
 
 var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
@@ -9,6 +7,7 @@ AWS.config.credentials = credentials;
 
 // Create an SQS service object
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+
 var filteringService = `{
   userid     : ${faker.random.number({
     'min': 1,
@@ -70,7 +69,7 @@ var params = {
  QueueUrl: "https://sqs.us-west-1.amazonaws.com/798879754898/userAnalytics"
 };
 
-for (var i = 0; i < 100000; i++) {
+for (var i = 0; i < 10; i++) {
   var counter = 1;
   sqs.sendMessage(params, (err, data) => {
     (err) ? console.log("Error", err) : console.log(`Msg #${counter} sent!`, data.MessageId);
