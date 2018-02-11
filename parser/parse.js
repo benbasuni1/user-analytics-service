@@ -1,61 +1,125 @@
+/*
+-------------------
+Data from Client
+-------------------
+{ cart:
+     { StringValue: 'true',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'String' },
+    productId:
+     { StringValue: '970912',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'Number' },
+    timestamp:
+     { StringValue: '2018-01-30 16:00:00.0000000+0000',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'String' },
+    userId:
+     { StringValue: '965',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'Number' },
+    wishlist:
+     { StringValue: 'false',
+       StringListValues: [],
+       BinaryListValues: [],
+*/
+
 var client = data => {
-   return {
-    userId    : data.userId,
-    productId : data.productId,
-    viewed    : data.event_type.view,
-    clicked   : data.event_type.clicked,
-    purchased : data.event_type.purchased,
-    cart      : data.event_type.cart,
-    wishlist  : data.event_type.wishlist,
-    timestamp : data.timestamp
+  let cart = {
+      userId    : parseInt(data['userId']['StringValue']),
+      productId : parseInt(data['productId']['StringValue']),
+      event     : 'cart'
   }
+
+  let wishlist = {
+      userId    : parseInt(data['userId']['StringValue']),
+      productId : parseInt(data['productId']['StringValue']),
+      event     : 'wishlist'
+  }
+
+  let result = [];
+
+  if (data['cart']['StringValue'] === 'true') result.push(cart); 
+  if (data['wishlist']['StringValue'] === 'true') result.push(wishlist);
+
+  return result;
 }
+
+/*
+-------------------------
+Data from Listings/Search (clicked)
+-------------------------
+{ productId:
+     { StringValue: '62693',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'Number' },
+    timestamp:
+     { StringValue: '2018-01-28 16:00:00.0000000+0000',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'String' },
+    userId:
+     { StringValue: '91',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'Number' } }
+*/
+
 var listings = data => {
   return {
-    userId    : data.userId,
-    productId : data.productId,
-    viewed    : data.viewed,
-    clicked   : data.clicked,
-    purchased : false,
-    cart      : false,
-    wishlist  : false,
-    timestamp : data.timestamp
+    userId    : parseInt(data['userId']['StringValue']),
+    productId : parseInt(data['productId']['StringValue']),
+    event     : 'clicked'
   }
 }
 
+/*
+----------------
+Data from Orders (purchased)
+----------------
+{ productId:
+     { StringValue: '457',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'Number' },
+    qty:
+     { StringValue: '3',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'Number' },
+    rating:
+     { StringValue: '4',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'Number' },
+    timestamp:
+     { StringValue: '2018-01-29 16:00:00.0000000+0000',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'String' },
+    userId:
+     { StringValue: '488360',
+       StringListValues: [],
+       BinaryListValues: [],
+       DataType: 'Number' } }
+*/
 var orders = data => {
-  var result = [];
-
-  for (var i = 0; i < data.data.items.length; i++) {
-    result.push({
-      userId    : data.data.userid,
-      productId : data.data.items[i].itemId,
-      viewed    : false,
-      clicked   : false,
-      purchased : true,
-      cart      : false,
-      wishlist  : false,
-      timestamp : data.data.timestamp
-    });
+  if (parseInt(data.qty.StringValue) > 0) {
+    return {
+      userId   : data['userId']['StringValue'],
+      productId: data['productId']['StringValue'],
+      event    : 'purchased'
+    }
   }
-
-  return result;
-}
-
-const allData = data => {
-  var result = [];
-  for (var i = 0; i < data.length; i++) {
-    if (data[i].type === 'client') result.push(parseFromClient(data[i]));
-    else if (data[i].type === 'listing') result.push(parseFromListings(data[i]));
-    else if (data[i].type === 'orders') result.push(parseFromOrders(data[i]));
-  } 
-
-  return result;
 }
 
 module.exports = {
   client,
   listings,
   orders,
-  allData
 }

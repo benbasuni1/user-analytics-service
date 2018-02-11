@@ -1,0 +1,33 @@
+// LISTINGS 
+{ 
+  userId    : 62693,
+  productId : 91,
+  cart      : true,
+  wishlist  : false,
+  timestamp : "2018-01-16 16 : 00 : 00.000000+0000"
+}
+
+aws sqs send-message --queue-url https://sqs.us-west-1.amazonaws.com/798879754898/Analytics --message-body "JSON from Listings" --message-attributes '{ "userId": {"DataType": "Number", "StringValue": "62693"}, "productId": {"DataType": "Number", "StringValue": "91"}, "timestamp": {"DataType": "String", "StringValue": "2018-01-28 16:00:00.0000000+0000"} }'
+
+// ORDERS
+{ 
+  userId    : 62693,
+  productId : 91,
+  qty       : 5,
+  rating    : 4,
+  timestamp : 2018-01-16 16 : 00 : 00.000000+0000
+}
+
+aws sqs send-message --queue-url https://sqs.us-west-1.amazonaws.com/798879754898/Analytics 
+--message-body "JSON from Orders" 
+--message-attributes '{ "userId": {"DataType": "Number", "StringValue": "488360"}, "productId": {"DataType": "Number", "StringValue": "457"}, "timestamp": {"DataType": "String", "StringValue": "2018-01-16 16:00:00.0000000+0000"} }'
+
+// CLIENT
+{ 
+  userId    : 62693,
+  productId : 91,
+  timestamp : 2018-01-16 16 : 00 : 00.000000+0000
+}
+
+aws sqs send-message --queue-url https://sqs.us-west-1.amazonaws.com/798879754898/Analytics --message-body "JSON from Client" --message-attributes 
+'{ "userId": {"DataType": "Number", "StringValue": "970912"}, "productId": {"DataType": "Number", "StringValue": "965"}, "timestamp": {"DataType": "String", "StringValue": "2018-01-30 16:00:00.0000000+0000"}, "cart": {"DataType": "String", "StringValue": "true"}, "wishlist": {"DataType": "String", "StringValue": "false"} }'

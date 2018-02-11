@@ -1,7 +1,7 @@
 const express    = require('express');
 const bodyParser = require('body-parser');
 const db         = require('../database/cassandra.js');
-const poll       = require('../queue/pollUserAnalytics');
+const poll       = require('../queue/getAnalyticsQueue');
 const format     = require('../parser/parse.js');
 
 const router = express.Router();
@@ -19,15 +19,31 @@ router.get('/', (req, res) => res.send('hello world!'));
 /* =========================
 == POLL FROM EVENTS QUEUE == 
 ==========================*/
-router.get('/queue/poll/analytics', async (req, res) => {
+router.get('/queue/analytics', async (req, res) => {
+    // get messages from analytics queue
     poll.getMessages()
-    .then(result => res.json(result))
-    .then(result => format.parseData(result))
-    .then(parsedData => {
-        db.insertIntoEventsByUserId(parsedData);
-        db.insertIntoEventsByProductId(parsedData);
-        db.insertIntoEventsByTime(parsedData);
-    }).then(() => res.json('insertion complete!'))
+    // Parse the data
+    .then(result => {
+        console.log(result);
+        let formattedData;
+        let objKeys = Object.keys(result[0]);
+        if (objKeys.length === 3) formattedData = format.listings(result[0]); // listings
+        else if (objKeys.includes('qty')) formattedData = format.orders(result[0]); // orders
+        else if (objKeys.includes('cart')) formattedData = format.client(result[0]); // client
+        return formattedData;
+    })
+    // insert into cassandra database
+    .then(formattedData => {
+        console.log('data formatted: ', formattedData);
+        if (formattedData.length > 1) {
+            console.log(formattedData);
+        } else {
+            db.insertIntoEventsByUserId(formattedData);
+        }
+        res.json('insert success');
+
+        return 'inserted success!';
+    })
     .catch(err => res.json(err));
 });
 

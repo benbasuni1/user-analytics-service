@@ -12,20 +12,16 @@ const params = {
   WaitTimeSeconds: 5
 };
 
-var messages = [];
-
 const getMessages = () => {
-  return new Promise ((resolve, reject) => {
-    sqs.receiveMessage(params, (err, data) => {
+  return new Promise((resolve, reject) => {
+    let messages = [];
+      sqs.receiveMessage(params, (err, data) => {
       for (var i = 0; i < data.Messages.length; i++) {
         if (!messages.includes(data.Messages[i].Body)) {
-          console.log(data.Messages);
           messages.push(data.Messages[i].MessageAttributes)
         }
-
-          // messages.push(data.Messages[i].Body);
       }
-      (err) ? reject(err) : resolve(messages);
+      (messages) ? resolve(messages) : reject(err);
     });
   });
 }

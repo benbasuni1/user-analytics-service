@@ -1,0 +1,13 @@
+CREATE TABLE user_analytics.EVENTS_BY_USER_ID (
+    user_id int,
+    created_at timestamp,
+    event_type text,
+    product_id int,
+    PRIMARY KEY (user_id, created_at)
+
+CREATE TABLE user_analytics.EVENTS_BY_PRODUCT_ID (
+    product_id int,
+    created_at timestamp,
+    event_type text,
+    user_id int,
+    PRIMARY KEY (product_id, created_at)
