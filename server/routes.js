@@ -36,12 +36,14 @@ router.get('/queue/analytics', async (req, res) => {
     .then(formattedData => {
         console.log('data formatted: ', formattedData);
         if (formattedData.length > 1) {
+            // need to handle bigger data
             console.log(formattedData);
         } else {
             db.insertIntoEventsByUserId(formattedData);
+            db.insertIntoEventsByProductId(formattedData);
         }
-        res.json('insert success');
 
+        res.json('insert success');
         return 'inserted success!';
     })
     .catch(err => res.json(err));
@@ -50,6 +52,31 @@ router.get('/queue/analytics', async (req, res) => {
 /* ===================
 == GET DATA FROM DB ==
 ====================*/
+
+router.get('/database/weekly', (req, res) => {
+    var start = new Date();
+
+    db.selectEventsByCurrentWeek()
+    .then(result => res.json(result.rows))
+    .catch(err => console.log(err));
+
+    var elapsed = new Date() - start;
+    console.log(elapsed + ' ms | get weekly items');
+})
+
+router.get('/database/weekly/:start_date/:end_date', (req, res) => {
+    var start = new Date();
+    /* params: year - month - day */
+    var startDate = req.params.start_date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3") + ' 00:00:00+0200';
+    var endDate = req.params.end_date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3") + ' 00:00:00+0200';
+
+    db.selectEventsByCurrentWeekCustom(startDate, endDate)
+    .then(result => res.json(result.rows))
+    .catch(err => console.log("Err", err));
+
+    var elapsed = new Date() - start;
+    console.log(elapsed + ' ms | get weekly items custommized');
+});
 
 /* Select All */
 router.get('/database/users', (req, res) => {
