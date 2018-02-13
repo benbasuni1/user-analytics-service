@@ -4,19 +4,7 @@ var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
 AWS.config.credentials = credentials;
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
-// get data from the database that are weekly,
-// post the messages batch by ____ messages
-// use cron to automate
-
-// for (var i = 0; i < 10; i++) {
-//   var counter = 1;
-//   sqs.sendMessage(params, (err, data) => {
-//     (err) ? console.log("Error", err) : console.log(`Msg #${counter} sent!`, data.MessageId);
-//     counter++;
-//   });
-// }
-
-var counter = 1;
+let counter = 1;
 const postMessage = (message) => {
   let title = `p${message.product_id}_u${message.user_id}_${message.event_type[0]}`
   let attributes = {

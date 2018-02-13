@@ -88,25 +88,6 @@ const selectUserByUserId = async userId =>  {
   catch (err) { console.log(err); }
 }
 
-/* == Events/Analytics Table == */
-const selectAllByProductId = async () =>  {
-  try { return await cassandra.execute('SELECT * from events_by_product_id;', []) }
-  catch (err) { console.log(err); }
-}
-
-const selectAllByUserId = async () => {
-  try { return await cassandra.execute('SELECT * from events_by_user_id;', []) }
-  catch (err) { console.log(err); }
-}
-
-const selectEventsByProductId = async productId => {
-  try { return await cassandra.execute(`SELECT * from events_by_product_id where product_id = ${productId};`, []) }
-  catch (err) { console.log(err); }
-}
-const selectEventsByUserId = async userId => {
-  try { return await cassandra.execute(`SELECT * from events_by_user_id where user_id = ${userId};`, []) }
-  catch (err) { console.log(err); }
-}
 
 module.exports = {
   insertIntoEventsByUserId,
@@ -117,10 +98,5 @@ module.exports = {
 
   selectAllUsers,
   selectUserByUserId,
-
-  selectAllByProductId,
-  selectAllByUserId,
-  selectEventsByProductId,
-  selectEventsByUserId,
 }
 

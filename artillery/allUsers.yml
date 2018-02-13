@@ -9,5 +9,3 @@ scenarios:
   - flow:
     - get:
         url: "/database/users"
-
-

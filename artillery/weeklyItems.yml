@@ -3,11 +3,11 @@ config:
   phases:
     - duration: 60
       arrivalRate: 30
-      name: "Attack /database/analytics/product"
+      name: "Attack /database/weekly"
 
 scenarios:
   - flow:
     - get:
-        url: "/database/analytics/product"
+        url: "/database/weekly"
 
 
