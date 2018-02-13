@@ -1,78 +1,51 @@
-var faker = require('faker');
 var AWS = require('aws-sdk');
 AWS.config.update({region: 'us-west-1'});
-
 var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
 AWS.config.credentials = credentials;
-
-// Create an SQS service object
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
-var filteringService = `{
-  userid     : ${faker.random.number({
-    'min': 1,
-    'max': 10000000,
-  })},
-  cart       : ${faker.random.boolean()},
-  clicked    : ${faker.random.boolean()},
-  created_at : ${faker.date.between('2018-01-01', '2018-04-01')},
-  product_id : ${faker.random.number({
-    'min': 1,
-    'max': 3000 
-  })},
-  purchased  : ${faker.random.boolean()},
-  viewed     : ${faker.random.boolean()},
-  wishlist   : ${faker.random.boolean()},
-}`;
+// get data from the database that are weekly,
+// post the messages batch by ____ messages
+// use cron to automate
 
-var orderService = `{
-  data : {
-    userid     : ${faker.random.number({
-      'min': 1,
-      'max': 10000000,
-    })},
-    items : [{
-      itemId : ${faker.random.number({
-        'min': 1,
-        'max': 10000000,
-      })},
-      qty : ${faker.random.number({
-        'min': 1,
-        'max': 5
-      })},
-      rating : ${faker.random.number({
-        'min': 1,
-        'max': 5
-      })}
-    }]
+// for (var i = 0; i < 10; i++) {
+//   var counter = 1;
+//   sqs.sendMessage(params, (err, data) => {
+//     (err) ? console.log("Error", err) : console.log(`Msg #${counter} sent!`, data.MessageId);
+//     counter++;
+//   });
+// }
+
+var counter = 1;
+const postMessage = (message) => {
+  let title = `p${message.product_id}_u${message.user_id}_${message.event_type[0]}`
+  let attributes = {
+    "ProductId": {
+      DataType: "String",
+      StringValue: message.product_id.toString()
+    },
+    "UserId": {
+      DataType: "String",
+      StringValue: message.user_id.toString()
+    },
+    "Event": {
+      DataType: "String",
+      StringValue: message.event_type
+    }
+  };
+  let params = {
+    DelaySeconds: 10,
+    MessageBody: title, // orderService
+    MessageAttributes: attributes,
+    QueueUrl: "https://sqs.us-west-1.amazonaws.com/798879754898/Filter"
   }
-}`;
-
-var listingService = `{
-  userid     : ${faker.random.number({
-    'min': 1,
-    'max': 10000000,
-  })},
-  product_id : ${faker.random.number({
-    'min': 1,
-    'max': 3000 
-  })},
-  viewed     : ${faker.random.boolean()},
-  clicked    : ${faker.random.boolean()},
-  created_at : ${faker.date.between('2018-01-01', '2018-04-01')},
-}`;
-
-var params = {
- DelaySeconds: 10,
- MessageAttributes: {},
- MessageBody: orderService, // orderService
- QueueUrl: "https://sqs.us-west-1.amazonaws.com/798879754898/userAnalytics"
-};
-
-for (var i = 0; i < 10; i++) {
-  var counter = 1;
+  console.log(counter, message, title, attributes);
   sqs.sendMessage(params, (err, data) => {
     (err) ? console.log("Error", err) : console.log(`Msg #${counter} sent!`, data.MessageId);
-    counter++;
   });
+  counter++;
+}
+
+module.exports = {
+  postMessage
 }

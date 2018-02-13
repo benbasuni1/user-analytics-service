@@ -20,14 +20,14 @@ const analyticsData = (type, round) => {
       if (type === 'product_id') {
         writer.write({
           product_id : faker.random.number({ 'min': 1, 'max': 3000 }),
-          created_at : new Date(faker.date.between('2018-01-01', '2018-04-01')).toISOString(),
+          created_at : faker.date.between('2018-01-01', '2018-01-08').getTime(),
           event_type : events[~~(Math.random() * events.length)],
           user_id    : faker.random.number({ 'min': 1, 'max': 10000000 }),
         });
       } else if (type === 'user_id') {
         writer.write({
           user_id    : faker.random.number({ 'min': 1, 'max': 10000000 }),
-          created_at : new Date(faker.date.between('2018-01-01', '2018-04-01')).toISOString(),
+          created_at : faker.date.between('2018-01-01', '2018-01-08').getTime(),
           event_type : events[~~(Math.random() * events.length)],
           product_id : faker.random.number({ 'min': 1, 'max': 3000 }),
         });

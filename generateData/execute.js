@@ -13,13 +13,13 @@ const d = [16, 20];
 
 var start = new Date();
 
-//execute.analyticsData('user_id', a);
-//execute.analyticsData('user_id', b);
+execute.analyticsData('user_id', a);
+execute.analyticsData('user_id', b);
 //execute.analyticsData('user_id', c);
 //execute.analyticsData('user_id', d);
 
-execute.analyticsData('product_id', a);
-execute.analyticsData('product_id', b);
+//execute.analyticsData('product_id', a);
+//execute.analyticsData('product_id', b);
 //execute.analyticsData('product_id', c);
 //execute.analyticsData('product_id', d);
 

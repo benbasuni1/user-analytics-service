@@ -33,6 +33,7 @@ router.get('/queue/analytics', async (req, res) => {
         return formattedData;
     })
     // insert into cassandra database
+    // Need to configure on how to deal with polling more messages and handling multiple messages rather than 1
     .then(formattedData => {
         console.log('data formatted: ', formattedData);
         if (formattedData.length > 1) {
@@ -52,7 +53,6 @@ router.get('/queue/analytics', async (req, res) => {
 /* ===================
 == GET DATA FROM DB ==
 ====================*/
-
 router.get('/database/weekly', (req, res) => {
     var start = new Date();
 
@@ -71,11 +71,23 @@ router.get('/database/weekly/:start_date/:end_date', (req, res) => {
     var endDate = req.params.end_date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3") + ' 00:00:00+0200';
 
     db.selectEventsByCurrentWeekCustom(startDate, endDate)
-    .then(result => res.json(result.rows))
+    .then(result => {
+        console.log(result.rows.length);
+        res.json(result.rows);
+    })
+    .then(end => {
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms | get weekly items custommized');
+    })
     .catch(err => console.log("Err", err));
+});
 
-    var elapsed = new Date() - start;
-    console.log(elapsed + ' ms | get weekly items custommized');
+
+/* ==========================
+== POST TO FILTERING QUEUE == 
+===========================*/
+router.post('/queue/filtering', function(req, res, next){
+  res.json('abc');
 });
 
 /* Select All */
@@ -153,28 +165,4 @@ router.get('/database/analytics/user/:userId', (req, res) => {
     }).catch(err => console.log("Err", err));
 });
 
-/* 
-    Time Format : yyyymmdd (YEAR MONTH DAY)
-*/
-router.get('/database/analytics/time/:start_date/:end_date', (req, res) => {
-    var start = new Date();
-    var startDate = req.params.start_date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3") + ' 00:00:00+0200';
-    var endDate = req.params.end_date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3") + ' 00:00:00+0200';
-
-    var selectByTime = db.selectEventsByTime(startDate, endDate);
-    selectByTime.then(result => {
-        res.json(result.rows);
-        var elapsed = new Date() - start;
-        console.log(elapsed + ' ms');
-    }).catch(err => console.log("Err", err));
-});
-
-router.post('/queue/filtering', function(req, res, next){
-  res.json('abc');
-});
-
-
-/* ==========================
-== POST TO FILTERING QUEUE == 
-===========================*/
 module.exports = router;

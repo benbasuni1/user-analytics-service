@@ -32,3 +32,5 @@ firstday
 "Sun, 06 Mar 2011 12:25:40 GMT"
 lastday
 "Sat, 12 Mar 2011 12:25:40 GMT"
+
+COPY EVENTS_BY_PRODUCT_ID FROM '~/Desktop/Capstone/Backazon/generateData/product_id/product_id01.csv'

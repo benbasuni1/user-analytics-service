@@ -1,9 +1,10 @@
 const format = require('../parser/parse');
+const sqsFilter = require('../queue/postFilteringQueue');
 const cassandraDriver = require('cassandra-driver');
 const cassandra = new cassandraDriver.Client({
   contactPoints: ['127.0.0.1:9042', '127.0.0.1:7199'], 
-  // keyspace: 'user_analytics_dev'
-  keyspace: 'user_analytics' 
+  keyspace: 'user_analytics_dev'
+  // keyspace: 'user_analytics' 
 });
 
 /* =============
@@ -42,16 +43,37 @@ const selectEventsByCurrentWeek = async () => {
   let start = format.currentWeek()[0];
   let end   = format.currentWeek()[1];
 
-  let query = `SELECT * FROM EVENTS_BY_PRODUCT_ID WHERE created_at >= '${start}' AND created_at <= '${end}' LIMIT 100000 ALLOW FILTERING`;
+  let query = `SELECT product_id, user_id, event_type FROM EVENTS_BY_PRODUCT_ID WHERE created_at >= '${start}' AND created_at <= '${end}' ALLOW FILTERING`;
 
   try { return await cassandra.execute(query, []) }
   catch (err) { console.log(err); }
 }
 
 const selectEventsByCurrentWeekCustom = async (start, end) => {
-  let query = `SELECT * FROM EVENTS_BY_PRODUCT_ID WHERE created_at >= '${start}' AND created_at <= '${end}' LIMIT 100000 ALLOW FILTERING`;
+  let query = `SELECT product_id, user_id, event_type FROM EVENTS_BY_PRODUCT_ID WHERE created_at >= '${start}' AND created_at <= '${end}' LIMIT 10 ALLOW FILTERING`;
+  let options = {
+    prepare: true,
+    autoPage: true,
+    fetchSize: 100000
+  };
 
-  try { return await cassandra.execute(query, []) }
+  var counter = 0;
+  try { return await cassandra.stream(query, [], options)
+    .on('readable', function() {
+      var start = new Date();
+      var row;
+      while (row = this.read()) {
+        // console.log('counter: ', counter, row);
+        sqsFilter.postMessage(row);
+        counter++;
+      }
+      var elapsed = new Date() - start;
+      console.log(elapsed +  ' ms');
+    })
+    .on('end', function() {
+      console.log('finished!');
+    })
+  }
   catch (err) { console.log(err); }
 }
 
