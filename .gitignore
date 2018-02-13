@@ -2,7 +2,6 @@ node_modules/
 package-lock.json
 .env
 generateData/created_at
-generateData/product_id
 generateData/user_id
 generateData/users
 generateData/import*
@@ -11,3 +10,4 @@ newrelic.js
 newrelic_agent.log
 .nyc_output/
 backazon.pem
+
