@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const db         = require('../database/cassandra.js');
 const poll       = require('../queue/getAnalyticsQueue');
 const format     = require('../parser/parse.js');
+const mongo      = require('../database/mongo.js');
+const couch      = require('../database/couch.js');
 
 const router = express.Router();
 
@@ -15,6 +17,7 @@ router.use(bodyParser());
 == CLIENT SIDE ROUTES ==
 ===================== */
 router.get('/', (req, res) => res.send('hello world!'));
+
 
 /* =========================
 == POLL FROM EVENTS QUEUE == 
@@ -57,14 +60,37 @@ router.get('/database/weekly', (req, res) => {
     var start = new Date();
 
     db.selectEventsByCurrentWeek()
-    .then(result => res.json(result.rows))
+    .then(result => {
+        console.log(result.rows.length)
+        res.json(result.rows)
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms | get weekly items');
+    })
     .catch(err => console.log(err));
-
-    var elapsed = new Date() - start;
-    console.log(elapsed + ' ms | get weekly items');
 })
 
-router.get('/database/weekly/:start_date/:end_date', (req, res) => {
+router.get('/mongo/weekly', (req, res) => {
+    var start = new Date();
+
+    mongo.findAll((err, result) => {
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+        return res.status(200).json(result);
+    });
+});
+
+router.get('/couch/weekly', (req, res) => {
+    var start = new Date();
+    console.log('here');
+
+    couch.findAll((err, result) => {
+        var elapsed = new Date() - start;
+        console.log(elapsed + ' ms');
+        return res.status(200).json(result);
+    });
+});
+
+router.get('/queue/filtering/:start_date/:end_date', (req, res) => {
     var start = new Date();
     /* params: year - month - day */
     var startDate = req.params.start_date.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3") + ' 00:00:00+0200';
@@ -72,7 +98,7 @@ router.get('/database/weekly/:start_date/:end_date', (req, res) => {
 
     db.selectEventsByCurrentWeekCustom(startDate, endDate)
     .then(result => {
-        console.log(result.rows.length);
+        console.log(result);
         res.json(result.rows);
     })
     .then(end => {
@@ -82,13 +108,9 @@ router.get('/database/weekly/:start_date/:end_date', (req, res) => {
     .catch(err => console.log("Err", err));
 });
 
-
 /* ==========================
 == POST TO FILTERING QUEUE == 
 ===========================*/
-router.post('/queue/filtering', function(req, res, next){
-  res.json('abc');
-});
 
 /* Select All */
 router.get('/database/users', (req, res) => {

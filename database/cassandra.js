@@ -40,17 +40,33 @@ const insertIntoEventsByProductId = item => {
 ===========*/
 
 const selectEventsByCurrentWeek = async () => {
-  let start = format.currentWeek()[0];
-  let end   = format.currentWeek()[1];
+  let start = '2018-01-01 00:00:00+0200';
+  let end   = '2018-01-08 00:00:00+0200';
 
   let query = `SELECT product_id, user_id, event_type FROM EVENTS_BY_PRODUCT_ID WHERE created_at >= '${start}' AND created_at <= '${end}' ALLOW FILTERING`;
 
-  try { return await cassandra.execute(query, []) }
+  var time = new Date();
+  try { return await cassandra.eachRow(query, [], {
+    autoPage: true,
+    fetchSize: 5000
+  }, function(n, row) {
+      console.log('#', n);
+      console.log(row);
+  }), function() {
+    var elapsed = new Date() - time;
+    console.log(elapsed + ' ms');
+  }
+  }
+
+  // try { return await cassandra.execute(query, [], {
+  //   prepare: true,
+  //   fetchSize: 1000000
+  // }) }
   catch (err) { console.log(err); }
 }
 
 const selectEventsByCurrentWeekCustom = async (start, end) => {
-  let query = `SELECT product_id, user_id, event_type FROM EVENTS_BY_PRODUCT_ID WHERE created_at >= '${start}' AND created_at <= '${end}' LIMIT 10 ALLOW FILTERING`;
+  let query = `SELECT product_id, user_id, event_type FROM EVENTS_BY_PRODUCT_ID WHERE created_at >= '${start}' AND created_at <= '${end}' ALLOW FILTERING`;
   let options = {
     prepare: true,
     autoPage: true,
@@ -60,15 +76,11 @@ const selectEventsByCurrentWeekCustom = async (start, end) => {
   var counter = 0;
   try { return await cassandra.stream(query, [], options)
     .on('readable', function() {
-      var start = new Date();
       var row;
       while (row = this.read()) {
-        // console.log('counter: ', counter, row);
         sqsFilter.postMessage(row);
         counter++;
       }
-      var elapsed = new Date() - start;
-      console.log(elapsed +  ' ms');
     })
     .on('end', function() {
       console.log('finished!');
@@ -79,7 +91,9 @@ const selectEventsByCurrentWeekCustom = async (start, end) => {
 
 /* == Users Table == */
 const selectAllUsers = async () =>  {
-  try { return await cassandra.execute('SELECT * from users;', []) }
+  try { return await cassandra.execute('SELECT * from users;', [], {
+    fetchSize: 100000
+  }) }
   catch (err) { console.log(err); }
 }
 

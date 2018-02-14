@@ -3,7 +3,7 @@ config:
   phases:
     - duration: 20
       arrivalRate: 20
-      name: "Attack /database/users"
+      name: "Attack /database/weekly"
 
 scenarios:
   - flow:

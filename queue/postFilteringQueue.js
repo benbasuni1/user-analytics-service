@@ -4,9 +4,9 @@ var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
 AWS.config.credentials = credentials;
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
-let counter = 1;
+var counter = 1;
 const postMessage = (message) => {
-  let title = `p${message.product_id}_u${message.user_id}_${message.event_type[0]}`
+  let title = `p${message.product_id}_u${message.user_id}_${message.event_type}`
   let attributes = {
     "ProductId": {
       DataType: "String",
@@ -27,11 +27,11 @@ const postMessage = (message) => {
     MessageAttributes: attributes,
     QueueUrl: "https://sqs.us-west-1.amazonaws.com/798879754898/Filter"
   }
-  console.log(counter, message, title, attributes);
+  // console.log(counter, message, title, attributes);
   sqs.sendMessage(params, (err, data) => {
     (err) ? console.log("Error", err) : console.log(`Msg #${counter} sent!`, data.MessageId);
+    counter++;
   });
-  counter++;
 }
 
 module.exports = {
