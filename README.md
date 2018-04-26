@@ -3,11 +3,11 @@
 # Folders
 ---
 ## Artillery
-- This folder uses the Artillery npm module to stress test my application (How many rps my app can handle)
+- Artillery yml files to stress test my application (How many rps my app can handle)
 
 ## Database
-- I tested 3 different databases and timed the quickest one. CouchDB, MongoDB, and CassandraDB were the 3 databases that I tested.  
-I ultimately went with CassandraDB.
+- I tested 3 different databases and timed them all. CouchDB, MongoDB, and CassandraDB were the 3 databases that I tested.  
+- I ultimately went with CassandraDB.
 
 ## Documentation
 - This is documentation that I have created on things that I have learned along the way of implementing this application.
@@ -26,5 +26,5 @@ I ultimately went with CassandraDB.
 
 ## Test
 - I created this application with the Test Driven Development philosophy, writing tests firsts and then implementing functionality.   
-This folder is all of my tests.
+- This folder is all of my tests.
 
