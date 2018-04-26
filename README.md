@@ -1,4 +1,10 @@
-# User Analytics Microservice
+# Backazon - User Analytics Microservice
+Online consumer products marketplace.
+
+
+[User Stories](https://docs.google.com/document/d/1-2410YObVQiQ_ki3VHkMOt2EF3Lx2sY7Z468WK5ktf0/edit)  
+[App Plan](https://docs.google.com/document/d/1oRRk7g_4DCMgJMwuvC3tTENw1iWPoHeU-kxoD4Ce78w/edit#)  
+[System Architecture](https://docs.google.com/document/d/1-2410YObVQiQ_ki3VHkMOt2EF3Lx2sY7Z468WK5ktf0/edit)  
 
 # Folders
 ---
@@ -28,3 +34,11 @@
 - I created this application with the Test Driven Development philosophy, writing tests firsts and then implementing functionality.   
 - This folder is all of my tests.
 
+## Requirements
+Node 9.4
+NPM 5.6
+CassandraDB
+
+## Run application
+npm install
+npm start
