@@ -35,10 +35,10 @@ Online consumer products marketplace.
 - This folder is all of my tests.
 
 ## Requirements
-Node 9.4
-NPM 5.6
-CassandraDB
+Node 9.4  
+NPM 5.6  
+CassandraDB  
 
 ## Run application
-npm install
-npm start
+npm install  
+npm start  
